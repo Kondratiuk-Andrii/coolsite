@@ -10,10 +10,11 @@ class AddPostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cat'].empty_label = 'Категория не выбрана'
+        # self.fields['slug'].disabled = True
 
     class Meta:
         model = Women
-        fields = ('title', 'slug', 'content', 'photo', 'is_published', 'cat')
+        fields = ('title', 'content', 'photo', 'is_published', 'cat')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-input'}),
             'content': forms.Textarea(attrs={'cols': 60, 'rows': 10}),
@@ -46,5 +47,7 @@ class RegisterUserForm(UserCreationForm):
 
 
 class LoginUserForm(AuthenticationForm):
-    username = forms.CharField(label="Логин", widget=forms.TextInput(attrs={"class": "form-input"}))
-    password = forms.CharField(label="Пароль", widget=forms.PasswordInput(attrs={"class": "form-input"}))
+    username = forms.CharField(label="Логин",
+                               widget=forms.TextInput(attrs={"class": "form-input", "placeholder": "Логин"}))
+    password = forms.CharField(label="Пароль",
+                               widget=forms.PasswordInput(attrs={"class": "form-input", "placeholder": "Пароль"}))

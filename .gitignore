@@ -1,3 +1,4 @@
+*.djcache
 *.log
 *.pot
 *.pyc
