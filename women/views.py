@@ -11,7 +11,6 @@ from .utils import *
 menu = [{'title': "О сайте", 'url_name': 'women:about'},
         {'title': "Добавить статью", 'url_name': 'women:addpage'},
         {'title': "Обратная связь", 'url_name': 'women:contact'},
-        {'title': "Войти", 'url_name': 'women:login'}
         ]
 
 
@@ -24,11 +23,6 @@ class WomenHome(DataMixin, ListView):
     # extra_context = {}  # Можно передавать ТОЛЬКО статические данные
 
     def get_context_data(self, *, object_list=None, **kwargs):  # Можно передавать НЕ ТОЛЬКО статические данные
-        # context = super().get_context_data(**kwargs)
-        # context['title'] = 'Главная страница'
-        # context['cat_selected'] = 0
-        # return context
-
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Главная страница")
         return dict(list(context.items()) + list(c_def.items()))
@@ -94,3 +88,14 @@ class WomenCategory(DataMixin, ListView):
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
+
+
+class RegisterUser(DataMixin, CreateView):
+    form_class = RegisterUserForm
+    template_name = 'women/register.html'
+    success_url = reverse_lazy('women:login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Регистрация")
+        return dict(list(context.items()) + list(c_def.items()))

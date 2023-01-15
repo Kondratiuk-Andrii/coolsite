@@ -20,12 +20,9 @@
                             <div class="logo"></div>
                         </a></li>
                         {% for m in menu %}
-                            {% if not forloop.last %}
-                                <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
-                            {% else %}
-                                <li class="last"><a href="{% url m.url_name %}">{{ m.title }}</a></li>
-                            {% endif %}
+                            <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
                         {% endfor %}
+                        <li class="last"><a href="{% url 'women:register' %}">Регистрация</a> | <a href="{% url 'women:login' %}">Войти</a></li>
                     </ul>
                     <div class="clear"></div>
                 </div>
@@ -43,13 +40,13 @@
                                 <li><a href="{% url 'women:home' %}">Все категории</a></li>
                             {% endif %}
 
-{#                            {% show_categories 'name' cat_selected %}#}
+                            {#                            {% show_categories 'name' cat_selected %}#}
 
                             {% for c in cats %}
-                                    {% if c.pk == cat_selected %}
-                                        <li class="selected">{{ c.name }}</li>
-                                    {% else %}
-                                        <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+                                {% if c.pk == cat_selected %}
+                                    <li class="selected">{{ c.name }}</li>
+                                {% else %}
+                                    <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
                                 {% endif %}
                             {% endfor %}
 
