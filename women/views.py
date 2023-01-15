@@ -1,3 +1,5 @@
+from django.contrib.auth import logout, login
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -15,7 +17,6 @@ menu = [{'title': "О сайте", 'url_name': 'women:about'},
 
 
 class WomenHome(DataMixin, ListView):
-    paginate_by = 3
     model = Women  # Передает все записи модели в виде списка
     template_name = 'women/index.html'  # Указываем имя шаблона вместо women/women_list.html
     context_object_name = 'posts'  # Переопределяем название колекции объектов модели
@@ -28,7 +29,7 @@ class WomenHome(DataMixin, ListView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
-        return Women.objects.filter(is_published=True)
+        return Women.objects.filter(is_published=True).select_related('cat')
 
 
 def about(request):
@@ -52,10 +53,6 @@ def contact(request):
     return render(request, 'women/zaglushka.html', {'title': 'contact', 'menu': menu})
 
 
-def login(request):
-    return render(request, 'women/zaglushka.html', {'title': 'login', 'menu': menu})
-
-
 class ShowPost(DataMixin, DetailView):
     model = Women
     template_name = 'women/post.html'
@@ -76,14 +73,15 @@ class WomenCategory(DataMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        c = Category.objects.get(slug=self.kwargs['cat_slug'])
         c_def = self.get_user_context(
-            title='Мировые - ' + str(context['posts'][0].cat),
-            cat_selected=context['posts'][0].cat_id,
+            title='Категория - ' + str(c.name),
+            cat_selected=c.pk,
         )
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
-        return Women.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)
+        return Women.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True).select_related('cat')
 
 
 def pageNotFound(request, exception):
@@ -99,3 +97,26 @@ class RegisterUser(DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Регистрация")
         return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('women:home')
+
+
+class LoginUser(DataMixin, LoginView):
+    form_class = LoginUserForm
+    template_name = 'women/login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Авторизация')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_success_url(self):
+        return reverse_lazy('women:home')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('women:home')
