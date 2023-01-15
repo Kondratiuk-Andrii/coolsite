@@ -1,10 +1,13 @@
 from django.db import models
+from django.db.models import Count
 from django.urls import reverse
+
+from pytils.translit import slugify
 
 
 class Women(models.Model):
     title = models.CharField(max_length=255, verbose_name='Имя')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+    slug = models.SlugField(max_length=255, blank=True, unique=True, db_index=True, verbose_name="URL")
     content = models.TextField(blank=True, verbose_name='Текст статьи')
     photo = models.ImageField(upload_to="photo/%Y/%m/%d/", verbose_name='Фото')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
@@ -17,6 +20,14 @@ class Women(models.Model):
 
     def get_absolute_url(self):
         return reverse('women:post', kwargs={'post_slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.title)
+            identity = len(Women.objects.annotate(Count('slug')).filter(slug__contains=self.slug))
+            if identity:
+                self.slug += str(identity + 1)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Известные женщины'

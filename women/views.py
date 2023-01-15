@@ -10,10 +10,7 @@ from .models import *
 from .forms import *
 from .utils import *
 
-menu = [{'title': "О сайте", 'url_name': 'women:about'},
-        {'title': "Добавить статью", 'url_name': 'women:addpage'},
-        {'title': "Обратная связь", 'url_name': 'women:contact'},
-        ]
+menu = menu
 
 
 class WomenHome(DataMixin, ListView):
@@ -32,8 +29,17 @@ class WomenHome(DataMixin, ListView):
         return Women.objects.filter(is_published=True).select_related('cat')
 
 
-def about(request):
-    return render(request, 'women/about.html', context={'menu': menu})
+class AboutPage(DataMixin, ListView):
+    paginate_by = 100
+    template_name = 'women/zaglushka.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="О сайте")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_queryset(self):
+        return Women.objects.filter(is_published=True).select_related('cat')
 
 
 class AddPage(LoginRequiredMixin, DataMixin, CreateView):
@@ -49,8 +55,21 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-def contact(request):
-    return render(request, 'women/zaglushka.html', {'title': 'contact', 'menu': menu})
+class ContactPage(DataMixin, ListView):
+    paginate_by = 100
+    template_name = 'women/zaglushka.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Обратная связь")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_queryset(self):
+        return Women.objects.filter(is_published=True).select_related('cat')
+
+
+# def contact(request):
+#     return render(request, 'women/zaglushka.html', {'title': 'contact', 'menu': menu})
 
 
 class ShowPost(DataMixin, DetailView):
