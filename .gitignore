@@ -1,5 +1,9 @@
-*.djcache
 *.log
 *.pot
 *.pyc
-__pycache__/
+__pycache__
+db.sqlite3
+media
+.DS_Store
+.idea
+coolsite_cache
