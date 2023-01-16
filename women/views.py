@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import *
@@ -31,7 +31,7 @@ class WomenHome(DataMixin, ListView):
 
 class AboutPage(DataMixin, ListView):
     paginate_by = 100
-    template_name = 'women/zaglushka.html'
+    template_name = 'women/about.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,21 +55,19 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class ContactPage(DataMixin, ListView):
-    paginate_by = 100
-    template_name = 'women/zaglushka.html'
+class ContactFormView(DataMixin, FormView):
+    form_class = ContactForm
+    template_name = 'women/contact.html'
+    success_url = reverse_lazy('women:home')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Обратная связь")
         return dict(list(context.items()) + list(c_def.items()))
 
-    def get_queryset(self):
-        return Women.objects.filter(is_published=True).select_related('cat')
-
-
-# def contact(request):
-#     return render(request, 'women/zaglushka.html', {'title': 'contact', 'menu': menu})
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return redirect('women:home')
 
 
 class ShowPost(DataMixin, DetailView):
