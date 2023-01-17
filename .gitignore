@@ -1,9 +1,9 @@
 *.log
 *.pot
 *.pyc
-__pycache__
+__pycache__/
 db.sqlite3
-media
+media/
 .DS_Store
-.idea
-coolsite_cache
+.idea/
+coolsite_cache/
