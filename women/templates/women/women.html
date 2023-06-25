@@ -1,0 +1,9 @@
+{% extends 'women/base.html' %}
+{% load static %}
+{% load women_tags %}
+
+{% block content %}
+    <ul>
+        {% show_posts '-time_update' cat_slug %}
+    </ul>
+{% endblock %}
