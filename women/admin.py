@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from women.models import Women, Category
+from women.models import Category, Women
 
 
 @admin.register(Women)

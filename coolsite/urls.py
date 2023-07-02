@@ -16,24 +16,25 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 
 from coolsite import settings
-from women.views import pageNotFound, about, feedback, add_post, index
+from women.views import AboutView, AddPostView, FeedbackView, pageNotFound
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
-    path('women/', include('women.urls', namespace='women')),
+    path('', include('women.urls', namespace='women')),
     path('users/', include('users.urls', namespace='users')),
-
-    path('about/', about, name='about'),
-    path('feedback/', feedback, name='feedback'),
-    path('add_post/', add_post, name='add_post'),
+    path('about/', AboutView.as_view(), name='about'),
+    path('feedback/', FeedbackView.as_view(), name='feedback'),
+    path('add_post/', login_required(AddPostView.as_view()), name='add_post'),
 ]
 
 if settings.DEBUG:
-    urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")), )
+    urlpatterns.append(
+        path("__debug__/", include("debug_toolbar.urls")),
+    )
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = pageNotFound

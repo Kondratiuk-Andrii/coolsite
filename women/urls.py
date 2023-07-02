@@ -1,13 +1,11 @@
 from django.urls import path
 
-from women.views import post_detail, index, women
+from women.views import IndexView, PostDetailView, WomenView
 
-app_name = 'women'
+app_name = "women"
 
 urlpatterns = [
-    path('', women, name='index'),
-    # path('', WomenView.as_view(), name='index'),
-    path('category/<slug:cat_slug>', women, name='category'),
-    path('post/<slug:post_slug>', post_detail, name='post_detail'),
-
+    path("", IndexView.as_view(), name="index"),
+    path("category/<slug:cat_slug>", WomenView.as_view(), name="category"),
+    path("post/<slug:post_slug>", PostDetailView.as_view(), name="post_detail"),
 ]

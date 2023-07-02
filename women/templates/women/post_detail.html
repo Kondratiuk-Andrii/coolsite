@@ -1,5 +1,4 @@
 {% extends 'women/base.html' %}
-{% load women_tags %}
 
 
 {% block content %}
@@ -7,6 +6,5 @@
     {% if post.photo %}
         <p><img class="img-article-left" src="{{ post.photo.url }}"></p>
     {% endif %}
-
     {{ post.content|linebreaks }}
 {% endblock %}

@@ -1,62 +1,59 @@
 from django.http import HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
+from common.views import CommonMixin
 from women.forms import WomenForm
-from women.models import Women, Category
+from women.models import Women
 
 
-def index(request, cat_slug=None):
-    context = {
-        'title': 'Coolsite',
-        'cat_slug': cat_slug,
-    }
-    return render(request, 'women/index.html', context)
+class IndexView(CommonMixin, TemplateView):
+    template_name = 'women/index.html'
 
 
-def women(request, cat_slug=None):
-    context = {
-        'title': 'Coolsite',
-        'cat_slug': cat_slug,
-    }
-    return render(request, 'women/women.html', context)
+class WomenView(CommonMixin, ListView):
+    model = Women
+    template_name = 'women/women.html'
+    context_object_name = 'posts'
+    title = 'Women'
+    allow_empty = True
+    paginate_by = 3
+
+    def get_queryset(self):
+        queryset = (
+            Women.objects
+            .filter(is_published=True)
+            .order_by('-time_create')
+            .select_related('category')
+        )
+        queryset = (queryset if self.kwargs.get('cat_slug') == 'all'
+                    else queryset.filter(category__slug=self.kwargs['cat_slug']))
+        return queryset
 
 
-def post_detail(request, post_slug):
-    post = get_object_or_404(Women, slug=post_slug)
-    context = {
-        'title': post.title,
-        'post': post,
-    }
-    return render(request, 'women/post_detail.html', context)
+class PostDetailView(CommonMixin, DetailView):
+    template_name = 'women/post_detail.html'
+    model = Women
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
 
 
-def about(request):
-    context = {
-        'title': 'О сайте',
-    }
-    return render(request, 'women/about.html', context)
+class AboutView(CommonMixin, TemplateView):
+    template_name = 'women/about.html'
+    title = 'О сайте'
 
 
-def feedback(request):
-    context = {
-        'title': 'Обратная связь',
-    }
-    return render(request, 'women/feedback.html', context)
+class AddPostView(CommonMixin, CreateView):
+    form_class = WomenForm
+    template_name = 'women/add_post.html'
+    title = 'Добавить статью'
+    success_url = reverse_lazy('index')
 
 
-def add_post(request):
-    if request.method == 'POST':
-        form = WomenForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('women:index')
-    else:
-        form = WomenForm()
-    context = {
-        'form': form,
-        'title': 'Добавить пост',
-    }
-    return render(request, 'women/add_post.html', context)
+class FeedbackView(CommonMixin, TemplateView):
+    template_name = 'women/feedback.html'
+    title = 'Обратная связь'
 
 
 def pageNotFound(request, exception):

@@ -1,18 +1,18 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from women.models import Women, Category
+from women.models import Women
 
 
 class WomenForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].max_length = 255
-        self.fields['title'].label = 'Заголовок:'
-        self.fields['content'].label = 'Текст статьи:'
-        self.fields['photo'].label = 'Фото:'
+        self.fields['title'].label = 'Заголовок'
+        self.fields['content'].label = 'Текст статьи'
+        self.fields['photo'].label = 'Фото'
         self.fields['photo'].required = False
-        self.fields['category'].label = 'Категория:'
+        self.fields['category'].label = 'Категория'
         self.fields['category'].empty_label = 'Категория не выбрана'
 
     class Meta:
