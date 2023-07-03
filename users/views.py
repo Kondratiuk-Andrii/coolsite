@@ -1,9 +1,9 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.shortcuts import redirect
+from django.views.generic import CreateView, TemplateView
 
 from common.views import CommonMixin
 from users.forms import UserLoginForm, UserRegisterForm
@@ -27,3 +27,8 @@ class UserRegisterView(CommonMixin, CreateView):
         user = form.save()
         login(self.request, user)
         return redirect('women:index')
+
+
+class UserProfileView(CommonMixin, LoginRequiredMixin, TemplateView):
+    title = 'Профиль'
+    template_name = 'users/profile.html'

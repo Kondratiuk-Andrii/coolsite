@@ -18,19 +18,19 @@ a:hover {
 }
 
 img {
-    max-width: 600px;
+    width: auto;
     height: auto;
 }
 
 img.img-article-left {
-    max-width: 300px;
-    height: auto;
+    width: auto;
+    max-height: 300px;
     float: left;
     padding: 0 10px 10px 0;
 }
 
 img.img-article-left.thumb {
-    max-width: 150px;
+    width: auto;
     height: auto;
 }
 
@@ -45,6 +45,7 @@ p.link-read-post a {
     color: #fff;
     text-decoration: none;
 }
+
 
 div.article-panel {
     background: #eee;
@@ -525,7 +526,7 @@ ul.lang-list li a:hover {
 .list-pages .page-num, .page-num-selected {
     display: inline-block;
     width: 60px;
-    height: 44px;
+    height: 60px;
     padding: 16px 0 0 0;
     border: 1px solid #d0d0d0;
     border-radius: 30px;
@@ -543,4 +544,31 @@ ul.lang-list li a:hover {
 
 .list-pages .page-num-selected:hover {
     box-shadow: none;
+}
+
+
+p.link-add-favorite-post {
+    text-align: right;
+}
+
+
+p.link-add-favorite-post a {
+    padding: 10px;
+    min-width: 100px;
+    background: green;
+    color: #fff;
+    text-decoration: none;
+}
+
+p.link-remove-favorite-post {
+    text-align: right;
+}
+
+
+p.link-remove-favorite-post a {
+    padding: 10px;
+    min-width: 100px;
+    background: #800303;
+    color: #fff;
+    text-decoration: none;
 }

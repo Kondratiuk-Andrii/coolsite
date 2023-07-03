@@ -1,11 +1,13 @@
 from django import template
-from django.db.models import Count
-from django.http import Http404
 
-from women.models import Category, Women
+from women.models import Women
 
 register = template.Library()
 
+
+@register.simple_tag()
+def show_new_posts():
+    return Women.objects.filter()[:3]
 
 # @register.simple_tag(name='get_categories')
 # def get_categories(pk=None):
@@ -13,18 +15,16 @@ register = template.Library()
 #         return Category.objects.all()
 #     else:
 #         return Category.objects.filter(pk=pk)
-@register.simple_tag()
-def get_new_posts():
-    return Women.objects.filter().order_by('-time_update')[:3]
 
 
-@register.inclusion_tag('women/list_categories.html')
-def show_categories(sort=None, cat_slug=None):
-    if not sort:
-        categories = Category.objects.all()
-    else:
-        categories = Category.objects.order_by(sort)
-    return {'categories': categories, 'cat_slug': cat_slug}
+# @register.inclusion_tag('women/list_categories.html')
+# def show_categories(sort=None, cat_slug=None):
+#     if not sort:
+#         categories = Category.objects.all()
+#     else:
+#         categories = Category.objects.order_by(sort)
+#     return {'categories': categories, 'cat_slug': cat_slug}
+
 #
 #
 # @register.inclusion_tag('women/list_posts.html')

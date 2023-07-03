@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <ul>
+        {% for post in posts %}
+            <li>
+                <div class="article-panel mt-4">
+                    <p class="first">Категория: {{ post.category }}</p>
+                    <p class="last">Дата: {{ post.time_update|date:"d-m-Y H:i:s" }}</p>
+                </div>
+                <h2>{{ post.title }}</h2>
+                {% if post.photo %}
+                    <p><img class="img-article-left" src="{{ post.photo.url }}"></p>
+                {% endif %}
+                {% autoescape off %}
+                    {{ post.content|linebreaks|striptags|truncatewords:100 }}
+                {% endautoescape %}
+                <div class="clear"></div>
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <a class="btn button btn-info" href="{{ post.get_absolute_url }}">
+                            Читать пост
+                        </a>
+                    </div>
+                    <div class="col-auto">
+                        {% if request.user.is_authenticated %}
+                            {% if post not in favorite_posts %}
+                                <a class="btn button btn-success" href="{% url 'women:add_to_favorite' post.slug %}">
+                                    Добавить в избранное
+                                </a>
+                            {% else %}
+                                <a class="btn button btn-danger" href="{% url 'women:remove_from_favorite' post.slug %}">
+                                    Удалить из избранного
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

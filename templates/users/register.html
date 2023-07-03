@@ -1,4 +1,9 @@
-{% extends 'women/base.html' %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+{% endblock css %}
 
 {% block content %}
     <h1>{{ title }}:</h1>
@@ -6,12 +11,11 @@
         {% csrf_token %}
         <div class="form-error">{{ form.non_field_errors }}</div>
         {% for item_form in form %}
-            <div class="mt-5"></div>
-            <div class="row">
-                <div class="col-lg-2">
+            <div class="row mt-5">
+                <div class="col-auto">
                     <label class="form-label" for="{{ item_form.id_for_label }}">{{ item_form.label }}: </label>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-auto">
                     {{ item_form }}
                 </div>
             </div>

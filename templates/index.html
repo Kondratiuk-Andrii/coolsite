@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static new_posts_tag %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+{% endblock css %}
+{% block content %}
+    </div>
+    <div class="container">
+        <h1 class="text-center">Coolsite - посвященный Женщинам Мира</h1>
+        <div class="row">
+            {% show_new_posts as posts %}
+            {% for post in posts %}
+                <div class="col mt-5 text-center">
+                    <div class="article-panel">
+                        <p class="text-center">Обновлено: {{ post.time_update|date:"d-m H:i" }}</p>
+                    </div>
+                    <a class="btn button" href="{{ post.get_absolute_url }}">
+                        {% if post.photo %}
+                            <p><img src="{{ post.photo.url }}"/></p>
+                        {% endif %}
+                        <h1>{{ post.title }}</h1>
+                        {% autoescape off %}
+                            <p>{{ post.content|linebreaks|striptags|truncatewords:100 }}</p>
+                        {% endautoescape %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

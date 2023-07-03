@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+{% endblock css %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <h1>{{ post.title }}</h1>
+            <img src="{{ post.photo.url }}" alt="Фото" class="float-left mr-3">
+            <p class="float-right">{{ post.content|linebreaks }}</p>
+        </div>
+    </div>
+
+    {% if request.user.is_authenticated %}
+        {% if post not in request.user.favorite_posts.all %}
+            <a class="btn button btn-success float-right btn-bottom-right" href="{% url 'women:add_to_favorite' post.slug %}">Добавить в
+                избранное</a>
+        {% else %}
+            <a class="btn button btn-danger float-right btn-bottom-right" href="{% url 'women:remove_from_favorite' post.slug %}">Удалить из
+                избранного</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}

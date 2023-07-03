@@ -1,4 +1,8 @@
-{% extends 'women/base.html' %}
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+{% endblock css %}
 
 {% block content %}
     <h1>{{ title }}</h1>

@@ -28,6 +28,7 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('about/', AboutView.as_view(), name='about'),
     path('feedback/', FeedbackView.as_view(), name='feedback'),
+    path('captcha/', include('captcha.urls')),
     path('add_post/', login_required(AddPostView.as_view()), name='add_post'),
 ]
 

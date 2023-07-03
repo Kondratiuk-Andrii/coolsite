@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+{% endblock css %}
+{% block content %}
+    <h1>{{ title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% for item_form in form %}
+            <p>
+                <label for="{{ item_form.id_for_label }}" class="form-label">{{ item_form.label }}:</label>
+                {{ item_form }}
+            </p>
+            <div class="form-error">{{ item_form.errors }}</div>
+        {% endfor %}
+        <button type="submit">Отправить</button>
+    </form>
+{% endblock content %}
